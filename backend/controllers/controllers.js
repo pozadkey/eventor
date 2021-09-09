@@ -13,6 +13,7 @@ module.exports.addController = (req, res) => {
 
         addCode.save().then(result => {
             res.status(201).send(`${result.code.toUpperCase()} was added successfully!`)
+            console.log(result);
         })
         .catch(error => {
             res.status(500).send(`Sorry, an unknown error occurred.`)

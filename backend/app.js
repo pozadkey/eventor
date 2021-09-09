@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const localhost = '127.0.0.1';
-const port = 3000 || process.env.PORT;
+const port = 80 || process.env.PORT;
 require('dotenv').config();
 const router = require('./routes/routes');
 
