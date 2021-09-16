@@ -20,7 +20,7 @@ module.exports.addController = (req, res) => {
         })
        }
        else {
-           res.status(201).send(`Error! ${result.code.toUpperCase()} already exists.`)
+           res.status(200).send(`Error! ${result.code.toUpperCase()} already exists.`)
        }
    })
 }
@@ -42,7 +42,7 @@ module.exports.validateController = (req, res) => {
             })
         }
         else {
-            res.status(500).send(`Sorry, ${result.code.toUpperCase()} has been used.`);
+            res.status(200).send(`Sorry, ${result.code.toUpperCase()} has been used.`);
         }
     })
 }
