@@ -1,6 +1,5 @@
+import 'package:eventor/views/home.dart';
 import 'package:flutter/material.dart';
-
-import 'home/home.dart';
 
 void main() {
   runApp(MyApp());

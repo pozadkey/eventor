@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:eventor/views/success.dart';
+import 'package:eventor/views/errors.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,6 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _formKey = GlobalKey<FormState>();
   double textSize = 20;
   String? scanTicket;
 
@@ -21,9 +24,13 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Eventor',
-        ),
+        title: Text('EVENTOR',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                letterSpacing: 2.0,
+                height: 1.5,
+                fontWeight: FontWeight.w700)),
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
@@ -33,34 +40,46 @@ class _HomeState extends State<Home> {
             children: [
               Container(
                 padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      style: TextStyle(color: Colors.white),
-                      onChanged: (value) {
-                        code = value;
-                      },
-                      decoration: InputDecoration(
-                        fillColor: Colors.grey[850],
-                        filled: true,
-                        hintText: 'ENTER CODE',
-                        hintStyle:
-                            TextStyle(color: Colors.white, letterSpacing: 1.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return '';
+                          } else {
+                            code = val;
+                            return null;
+                          }
+                        },
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          fillColor: Colors.grey[850],
+                          filled: true,
+                          hintText: 'ENTER CODE',
+                          hintStyle: TextStyle(
+                              color: Colors.white, letterSpacing: 1.0),
+                          border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 2.0)),
+                          focusedBorder: OutlineInputBorder(
                             borderSide:
-                                BorderSide(color: Colors.grey, width: 2.0)),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.orange, width: 2.0),
-                          borderRadius: BorderRadius.circular(12.0),
+                                BorderSide(color: Colors.lightBlue, width: 2.0),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 2.0)),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
@@ -82,10 +101,11 @@ class _HomeState extends State<Home> {
                               children: [
                                 IconButton(
                                   onPressed: () {
-                                    print(code);
-                                    addTicket(code);
+                                    if (_formKey.currentState!.validate()) {
+                                      addTicket(code);
+                                    }
                                   },
-                                  color: Colors.orange,
+                                  color: Colors.lightBlue,
                                   icon: Icon(Icons.add_circle),
                                   iconSize: 80,
                                 ),
@@ -115,11 +135,13 @@ class _HomeState extends State<Home> {
                               children: [
                                 IconButton(
                                   onPressed: () {
-                                    code == null
-                                        ? scanBarcode()
-                                        : validateTicket(code);
+                                    if (_formKey.currentState!.validate()) {
+                                      validateTicket(code);
+                                    } else {
+                                      scanBarcode();
+                                    }
                                   },
-                                  color: Colors.orange,
+                                  color: Colors.lightBlue,
                                   icon: Icon(Icons.camera_rounded),
                                   iconSize: 80,
                                 ),
@@ -140,10 +162,6 @@ class _HomeState extends State<Home> {
               ),
               SizedBox(
                 height: 15,
-              ),
-              Text(
-                scanTicket == null ? '' : 'CODE: $scanTicket',
-                style: TextStyle(color: Colors.white),
               ),
             ],
           ),
@@ -168,42 +186,61 @@ class _HomeState extends State<Home> {
       this.code = scanTicket;
     });
     validateTicket(code);
+    setState(() {
+      this.code = null;
+    });
   }
-}
 
-addTicket(code) async {
-  //var url = 'http://10.0.2.2:8000/add';
-  var url = 'http://172.20.10.8/add';
-  final response = await http.post(
-    Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'code': code,
-    }),
-  );
-  print(response.body);
-  //if (response.statusCode == 201) {
-  //} else {
-  //throw Exception('Failed to add ticket code');
-  //}
-}
+  addTicket(code) async {
+    //var url = 'http://10.0.2.2:8000/add';
+    var url = 'http://172.20.10.8/add';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'code': code,
+      }),
+    );
 
-validateTicket(code) async {
-  var url = 'http://172.20.10.8/validate';
-  final response = await http.post(
-    Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'code': code,
-    }),
-  );
-  print(response.body);
-  //if (response.statusCode == 201) {
-  //} else {
-  //throw Exception('Failed to add ticket code');
-  //}
+    if (response.statusCode == 201) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Success(resText: response.body)));
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Error(resText: response.body)));
+    }
+  }
+
+  validateTicket(code) async {
+    var url = 'http://172.20.10.8/validate';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'code': code,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Success(resText: response.body)));
+    } else if (response.body == 'Sorry, -1 has been used.') {
+      return null;
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Error(resText: response.body)));
+    }
+  }
 }
