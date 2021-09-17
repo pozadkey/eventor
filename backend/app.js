@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const port = 80 || process.env.PORT;
+const PORT = process.env.PORT;
 require('dotenv').config();
 const router = require('./routes/routes');
 
@@ -8,9 +8,9 @@ const app = express();
 const db = process.env.DB //ADD YOUR MONGODB URL
 
 mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true }, () => {
-    app.listen(port, (err, data) => {
+    app.listen(PORT, (err, data) => {
         if (err) throw err
-        console.log('server is listening to port ' + port);
+        console.log('server is listening to port ' + PORT);
     })
 })
 

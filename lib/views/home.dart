@@ -193,7 +193,7 @@ class _HomeState extends State<Home> {
 
   addTicket(code) async {
     //var url = 'http://10.0.2.2:8000/add';
-    var url = 'http://172.20.10.8/add';
+    var url = 'https://eventor-back.herokuapp.com/add';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -218,7 +218,7 @@ class _HomeState extends State<Home> {
   }
 
   validateTicket(code) async {
-    var url = 'http://172.20.10.8/validate';
+    var url = 'https://eventor-back.herokuapp.com/validate';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
