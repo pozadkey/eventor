@@ -24,13 +24,28 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('EVENTOR',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                letterSpacing: 2.0,
-                height: 1.5,
-                fontWeight: FontWeight.w700)),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('EVENTOR',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    letterSpacing: 2.0,
+                    height: 1.5,
+                    fontWeight: FontWeight.w700)),
+            SizedBox(
+              width: 5,
+            ),
+            Text('beta',
+                style: TextStyle(
+                    color: Colors.lightBlue,
+                    fontSize: 14,
+                    letterSpacing: 2.0,
+                    height: 2.3,
+                    fontWeight: FontWeight.w600)),
+          ],
+        ),
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
@@ -103,6 +118,8 @@ class _HomeState extends State<Home> {
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       addTicket(code);
+                                    } else {
+                                      addBarcode();
                                     }
                                   },
                                   color: Colors.lightBlue,
@@ -191,9 +208,30 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future addBarcode() async {
+    String scanTicket;
+
+    try {
+      scanTicket = await FlutterBarcodeScanner.scanBarcode(
+          '#000000', 'Cancel', true, ScanMode.QR);
+    } on PlatformException {
+      scanTicket = 'Something went wrong.';
+    }
+    if (!mounted) return;
+
+    setState(() => this.scanTicket = scanTicket);
+    setState(() {
+      this.code = scanTicket;
+    });
+    addTicket(code);
+    setState(() {
+      this.code = null;
+    });
+  }
+
   addTicket(code) async {
     //var url = 'http://10.0.2.2:8000/add';
-    var url = 'https://eventor-back.herokuapp.com/add';
+    var url = '172.20.10.8:3000/add';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -218,7 +256,7 @@ class _HomeState extends State<Home> {
   }
 
   validateTicket(code) async {
-    var url = 'https://eventor-back.herokuapp.com/validate';
+    var url = '172.20.10.8:3000/validate';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -226,6 +264,7 @@ class _HomeState extends State<Home> {
       },
       body: jsonEncode(<String, String>{
         'code': code,
+        
       }),
     );
 
