@@ -1,4 +1,3 @@
-import 'package:eventor/views/demo.dart';
 import 'package:eventor/views/home.dart';
 import 'package:eventor/views/login.dart';
 import 'package:eventor/views/profile.dart';
@@ -21,12 +20,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: new ThemeData(scaffoldBackgroundColor: Colors.white),
-        home: Demo(),
+        home: Home(),
         routes: <String, WidgetBuilder>{
           '/login': (BuildContext context) => new Login(),
           '/register': (BuildContext context) => new Register(),
           '/logout': (BuildContext context) => new Register(),
-          '/dashboard': (BuildContext context) => new Demo(),
+          '/dashboard': (BuildContext context) => new Home(),
           '/profile': (BuildContext context) => new Profile(),
         });
   }

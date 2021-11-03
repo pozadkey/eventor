@@ -1,10 +1,12 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
+import 'package:eventor/model/detail.dart';
 import 'package:eventor/views/success.dart';
 import 'package:eventor/views/errors.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -23,96 +25,94 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('EVENTOR',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    letterSpacing: 2.0,
-                    height: 1.5,
-                    fontWeight: FontWeight.w700)),
-            SizedBox(
-              width: 5,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70),
+        child: AppBar(
+          elevation: 0,
+          title: Container(
+            padding: EdgeInsets.fromLTRB(15, 40, 15, 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Hi John',
+                  style: TextStyle(
+                      color: Colors.purple[900],
+                      fontSize: 18,
+                      height: 1.5,
+                      fontWeight: FontWeight.w700),
+                ),
+                IconButton(
+                  icon: Icon(Icons.face_rounded),
+                  color: Colors.purple[900],
+                  onPressed: () {
+                    Navigator.of(context).popAndPushNamed('/profile');
+                  },
+                ),
+              ],
             ),
-            Text('beta',
-                style: TextStyle(
-                    color: Colors.lightBlue,
-                    fontSize: 14,
-                    letterSpacing: 2.0,
-                    height: 2.3,
-                    fontWeight: FontWeight.w600)),
-          ],
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
         ),
-        centerTitle: true,
-        backgroundColor: Colors.black,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return '';
-                          } else {
-                            code = val;
-                            return null;
-                          }
-                        },
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          fillColor: Colors.grey[850],
-                          filled: true,
-                          hintText: 'ENTER CODE',
-                          hintStyle: TextStyle(
-                              color: Colors.white, letterSpacing: 1.0),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 2.0)),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.lightBlue, width: 2.0),
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 2.0)),
-                        ),
-                      ),
-                    ],
+      body: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(15, 30, 15, 10),
+            child: Form(
+              key: _formKey,
+              child: TextFormField(
+                validator: (val) {
+                  if (val!.isEmpty) {
+                    return '';
+                  } else {
+                    code = val;
+                    return null;
+                  }
+                },
+                decoration: InputDecoration(
+                  fillColor: Colors.grey[50],
+                  filled: true,
+                  hintText: 'Enter code',
+                  contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          style: BorderStyle.none, color: Colors.white)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        style: BorderStyle.none, color: Colors.white),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Card(
-                        color: Colors.grey[850],
-                        shadowColor: Colors.grey,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+            child: Container(
+              padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+              decoration: BoxDecoration(
+                  color: Colors.purple[900],
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20.0),
+                  )),
+              height: 180,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: Flexible(
+                      child: Card(
+                        color: Colors.purple[900],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.0)),
                         child: Container(
-                            padding: EdgeInsets.all(10),
                             width: 150,
-                            height: 150,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 IconButton(
                                   onPressed: () {
@@ -122,33 +122,32 @@ class _HomeState extends State<Home> {
                                       addBarcode();
                                     }
                                   },
-                                  color: Colors.lightBlue,
-                                  icon: Icon(Icons.add_circle),
-                                  iconSize: 80,
-                                ),
-                                SizedBox(
-                                  height: 3,
+                                  icon: Icon(Icons.add_box_rounded),
+                                  iconSize: 60,
+                                  color: Colors.white,
                                 ),
                                 Text(
-                                  'ADD TICKET',
+                                  'ADD TEXT',
                                   style: TextStyle(
                                       color: Colors.white,
                                       letterSpacing: 1.0,
                                       fontWeight: FontWeight.w500),
                                 )
                               ],
-                            ))),
-                    SizedBox(
-                      width: 15,
+                            )),
+                      ),
                     ),
-                    Card(
-                        color: Colors.grey[850],
-                        shadowColor: Colors.grey,
+                  ),
+                  Container(
+                    child: Flexible(
+                      child: Card(
+                        color: Colors.purple[900],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.0)),
                         child: Container(
-                            padding: EdgeInsets.all(10),
                             width: 150,
-                            height: 150,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 IconButton(
                                   onPressed: () {
@@ -158,31 +157,137 @@ class _HomeState extends State<Home> {
                                       scanBarcode();
                                     }
                                   },
-                                  color: Colors.lightBlue,
                                   icon: Icon(Icons.camera_rounded),
-                                  iconSize: 80,
-                                ),
-                                SizedBox(
-                                  height: 3,
+                                  iconSize: 60,
+                                  color: Colors.white,
                                 ),
                                 Text(
-                                  'SCAN TICKET',
+                                  'SCAN TEXT',
                                   style: TextStyle(
                                       color: Colors.white,
                                       letterSpacing: 1.0,
                                       fontWeight: FontWeight.w500),
                                 )
                               ],
-                            ))),
+                            )),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+            child: Text(
+              'MY LIST',
+              style: TextStyle(
+                  color: Colors.purple[900],
+                  fontSize: 25,
+                  fontWeight: FontWeight.w700),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+            child: ListView.builder(
+                physics: ScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: 8,
+                itemBuilder: (context, index) {
+                  Detail detail = detailList[index];
+                  return Container(
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0)),
+                      color: Colors.grey[50],
+                      elevation: 0,
+                      child: ListTile(
+                        title: Text(detail.text),
+                        leading: Icon(
+                          Icons.add,
+                          color: Colors.grey[500],
+                          size: 30,
+                        ),
+                        trailing: Icon(
+                          Icons.check_box_rounded,
+                          color: Colors.grey[500],
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(100, 10, 100, 100),
+            child: Center(
+              child: TextButton(
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      'VIEW MORE...',
+                      style: TextStyle(
+                          color: Colors.white,
+                          letterSpacing: 1.0,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0)),
+                  backgroundColor: Colors.purple[900],
+                  shadowColor: Colors.grey[900],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: PreferredSize(
+        preferredSize: Size.fromHeight(70),
+        child: BottomAppBar(
+            elevation: 0,
+            child: Container(
+              height: 60,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).popAndPushNamed('/dashboard');
+                      },
+                      icon: Icon(Icons.home_rounded),
+                      iconSize: 30,
+                      color: Colors.purple[900],
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.list_rounded),
+                      iconSize: 30,
+                      color: Colors.purple[900],
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).popAndPushNamed('/profile');
+                      },
+                      icon: Icon(Icons.face_rounded),
+                      iconSize: 30,
+                      color: Colors.purple[900],
+                    ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 15,
-              ),
-            ],
-          ),
-        ),
+            )),
       ),
     );
   }
@@ -231,7 +336,7 @@ class _HomeState extends State<Home> {
 
   addTicket(code) async {
     //var url = 'http://10.0.2.2:8000/add';
-    var url = '172.20.10.8:3000/add';
+    var url = 'http://172.20.10.8:3000/add';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -256,7 +361,7 @@ class _HomeState extends State<Home> {
   }
 
   validateTicket(code) async {
-    var url = '172.20.10.8:3000/validate';
+    var url = 'http://172.20.10.8:3000/validate';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -264,7 +369,6 @@ class _HomeState extends State<Home> {
       },
       body: jsonEncode(<String, String>{
         'code': code,
-        
       }),
     );
 
