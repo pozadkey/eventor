@@ -15,7 +15,9 @@ class _SuccessState extends State<Success> {
     return Scaffold(
       appBar: AppBar(
         title: Text(''),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: BackButton(color: Colors.purple[900]),
       ),
       body: Center(
         child: Container(
@@ -26,20 +28,20 @@ class _SuccessState extends State<Success> {
               Expanded(
                 child: Icon(
                   Icons.check_box_rounded,
-                  color: Colors.green,
+                  color: Colors.purple[900],
                   size: 200,
                 ),
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(25, 0, 25, 20),
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: Text(widget.resText,
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
+                          color: Colors.grey[900],
+                          fontSize: 16,
                           letterSpacing: 1.0,
                           height: 1.5,
-                          fontWeight: FontWeight.w500)),
+                          fontWeight: FontWeight.w700)),
                 ),
               ),
               TextButton(
@@ -53,7 +55,7 @@ class _SuccessState extends State<Success> {
                 ),
                 style: TextButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.purple[900],
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0))),
               ),
