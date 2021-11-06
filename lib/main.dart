@@ -2,6 +2,7 @@ import 'package:eventor/views/home.dart';
 import 'package:eventor/views/login.dart';
 import 'package:eventor/views/profile.dart';
 import 'package:eventor/views/register.dart';
+import 'package:eventor/views/text_list.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -27,6 +28,7 @@ class _MyAppState extends State<MyApp> {
           '/logout': (BuildContext context) => new Register(),
           '/dashboard': (BuildContext context) => new Home(),
           '/profile': (BuildContext context) => new Profile(),
+          '/textlist': (BuildContext context) => new TextList(),
         });
   }
 }

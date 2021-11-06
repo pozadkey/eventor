@@ -91,7 +91,7 @@ class _HomeState extends State<Home> {
                   decoration: InputDecoration(
                     fillColor: Colors.grey[50],
                     filled: true,
-                    hintText: 'Enter code',
+                    hintText: 'Enter text',
                     contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -139,8 +139,12 @@ class _HomeState extends State<Home> {
                                         setState(() {});
                                       } else {
                                         await addBarcode();
-                                        texts.add(code);
-                                        setState(() {});
+                                        if (code == '') {
+                                          return null;
+                                        } else {
+                                          texts.add(code);
+                                          setState(() {});
+                                        }
                                       }
                                     },
                                     icon: Icon(Icons.add_box_rounded),
@@ -178,8 +182,12 @@ class _HomeState extends State<Home> {
                                         setState(() {});
                                       } else {
                                         await scanBarcode();
-                                        texts.add(code);
-                                        setState(() {});
+                                        if (code.isEmpty) {
+                                          return null;
+                                        } else {
+                                          texts.add(code);
+                                          setState(() {});
+                                        }
                                       }
                                     },
                                     icon: Icon(Icons.camera_rounded),
@@ -228,8 +236,7 @@ class _HomeState extends State<Home> {
                             color: Colors.grey[50],
                             elevation: 0,
                             child: ListTile(
-                              //title: Text(texts[index]),
-
+                              title: Text(texts[index]),
                               leading: Icon(
                                 Icons.add,
                                 color: Colors.grey[500],
@@ -241,7 +248,7 @@ class _HomeState extends State<Home> {
                                       texts.removeAt(index);
                                     });
                                   },
-                                  color: Colors.grey[500],
+                                  color: Colors.red,
                                   icon: Icon(
                                     Icons.delete,
                                     size: 30,
@@ -255,7 +262,9 @@ class _HomeState extends State<Home> {
               padding: EdgeInsets.fromLTRB(100, 10, 100, 100),
               child: Center(
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).popAndPushNamed('/textlist');
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -304,7 +313,9 @@ class _HomeState extends State<Home> {
                         color: Colors.purple[900],
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).popAndPushNamed('/textlist');
+                        },
                         icon: Icon(Icons.list_rounded),
                         iconSize: 30,
                         color: Colors.purple[900],
@@ -342,9 +353,13 @@ class _HomeState extends State<Home> {
       this.code = scanTicket;
     });
     validateTicket(code);
-    setState(() {
-      this.code = null;
-    });
+    if (code == '-1') {
+      setState(() {
+        this.code = '';
+      });
+    } else {
+      setState(() {});
+    }
   }
 
   Future addBarcode() async {
@@ -363,9 +378,13 @@ class _HomeState extends State<Home> {
       this.code = scanTicket;
     });
     addTicket(code);
-    setState(() {
-      this.code = null;
-    });
+    if (code == '-1') {
+      setState(() {
+        this.code = '';
+      });
+    } else {
+      setState(() {});
+    }
   }
 
   addTicket(code) async {
@@ -386,8 +405,8 @@ class _HomeState extends State<Home> {
           context,
           MaterialPageRoute(
               builder: (context) => Success(resText: response.body)));
-    } else if (response.body == 'Error!, -1 already exists.') {
-      return null;
+    } else if (response.body == 'Error! -1 already exists.') {
+      return Text('Working on something');
     } else {
       Navigator.push(
           context,
