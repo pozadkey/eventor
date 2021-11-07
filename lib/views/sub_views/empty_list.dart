@@ -9,11 +9,14 @@ class EmptyList extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(15, 40, 15, 40),
       child: Column(
         children: [
-          Icon(Icons.list),
+          Icon(
+            Icons.list,
+            color: Colors.grey[500],
+          ),
           Text(
             'You have an empty list.',
             style: TextStyle(
-                color: Colors.grey[900],
+                color: Colors.grey[500],
                 fontSize: 16,
                 fontWeight: FontWeight.w500),
           ),

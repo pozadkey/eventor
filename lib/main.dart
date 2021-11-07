@@ -1,8 +1,4 @@
 import 'package:eventor/views/home.dart';
-import 'package:eventor/views/login.dart';
-import 'package:eventor/views/profile.dart';
-import 'package:eventor/views/register.dart';
-import 'package:eventor/views/text_list.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -23,12 +19,7 @@ class _MyAppState extends State<MyApp> {
         theme: new ThemeData(scaffoldBackgroundColor: Colors.white),
         home: Home(),
         routes: <String, WidgetBuilder>{
-          '/login': (BuildContext context) => new Login(),
-          '/register': (BuildContext context) => new Register(),
-          '/logout': (BuildContext context) => new Register(),
-          '/dashboard': (BuildContext context) => new Home(),
-          '/profile': (BuildContext context) => new Profile(),
-          '/textlist': (BuildContext context) => new TextList(),
+          '/home': (BuildContext context) => new Home(),
         });
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-
-import 'empty_list.dart';
+import 'sub_views/empty_list.dart';
 
 class TextList extends StatefulWidget {
-  const TextList({Key? key}) : super(key: key);
+  final List<dynamic> texts;
+
+  const TextList({Key? key, required this.texts}) : super(key: key);
 
   @override
   _TextListState createState() => _TextListState();
@@ -23,7 +24,7 @@ class _TextListState extends State<TextList> {
           leading: BackButton(
             color: Colors.purple[900],
             onPressed: () {
-              Navigator.of(context).popAndPushNamed('/dashboard');
+              Navigator.pop(context);
             },
           ),
           backgroundColor: Colors.white,
@@ -53,12 +54,12 @@ class _TextListState extends State<TextList> {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-              child: texts.isEmpty
+              child: widget.texts.isEmpty
                   ? EmptyList()
                   : ListView.builder(
                       physics: ScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: texts.length,
+                      itemCount: widget.texts.length,
                       itemBuilder: (context, index) {
                         return Container(
                           child: Card(
@@ -67,7 +68,7 @@ class _TextListState extends State<TextList> {
                             color: Colors.grey[50],
                             elevation: 0,
                             child: ListTile(
-                              title: Text(texts[index]),
+                              title: Text(widget.texts[index]),
                               leading: Icon(
                                 Icons.add,
                                 color: Colors.grey[500],
@@ -76,7 +77,7 @@ class _TextListState extends State<TextList> {
                               trailing: IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      texts.removeAt(index);
+                                      widget.texts.removeAt(index);
                                     });
                                   },
                                   color: Colors.red,
@@ -90,6 +91,43 @@ class _TextListState extends State<TextList> {
                       }),
             ),
           ],
+        ),
+        bottomNavigationBar: PreferredSize(
+          preferredSize: Size.fromHeight(70),
+          child: BottomAppBar(
+              elevation: 0,
+              child: Container(
+                height: 60,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(2, 0, 2, 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.of(context).popAndPushNamed('/home');
+                        },
+                        icon: Icon(Icons.home_rounded),
+                        iconSize: 30,
+                        color: Colors.grey[500],
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TextList(
+                                        texts: texts,
+                                      )));
+                        },
+                        icon: Icon(Icons.list_rounded),
+                        iconSize: 30,
+                        color: Colors.grey[500],
+                      ),
+                    ],
+                  ),
+                ),
+              )),
         ),
       ),
     );

@@ -1,8 +1,8 @@
 import 'dart:convert';
-
-import 'package:eventor/views/empty_list.dart';
-import 'package:eventor/views/success.dart';
-import 'package:eventor/views/errors.dart';
+import 'package:eventor/views/sub_views/empty_list.dart';
+import 'package:eventor/views/sub_views/success.dart';
+import 'package:eventor/views/sub_views/errors.dart';
+import 'package:eventor/views/text_list.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +19,8 @@ class _HomeState extends State<Home> {
   final _formKey = GlobalKey<FormState>();
   double textSize = 20;
   String? scanTicket;
+  IconData? leadingIcon;
+  IconData? trailingIcons;
 
   List texts = [];
   final TextEditingController eCtrl = new TextEditingController();
@@ -42,25 +44,13 @@ class _HomeState extends State<Home> {
             elevation: 0,
             title: Container(
               padding: EdgeInsets.fromLTRB(15, 40, 15, 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Hi John',
-                    style: TextStyle(
-                        color: Colors.purple[900],
-                        fontSize: 18,
-                        height: 1.5,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.face_rounded),
+              child: Text(
+                'Eventor',
+                style: TextStyle(
                     color: Colors.purple[900],
-                    onPressed: () {
-                      Navigator.of(context).popAndPushNamed('/profile');
-                    },
-                  ),
-                ],
+                    fontSize: 18,
+                    height: 1.5,
+                    fontWeight: FontWeight.w700),
               ),
             ),
             centerTitle: true,
@@ -238,8 +228,8 @@ class _HomeState extends State<Home> {
                             child: ListTile(
                               title: Text(texts[index]),
                               leading: Icon(
-                                Icons.add,
-                                color: Colors.grey[500],
+                                leadingIcon,
+                                color: Colors.purple[900],
                                 size: 30,
                               ),
                               trailing: IconButton(
@@ -250,7 +240,7 @@ class _HomeState extends State<Home> {
                                   },
                                   color: Colors.red,
                                   icon: Icon(
-                                    Icons.delete,
+                                    trailingIcons,
                                     size: 30,
                                   )),
                             ),
@@ -263,7 +253,10 @@ class _HomeState extends State<Home> {
               child: Center(
                 child: TextButton(
                   onPressed: () {
-                    Navigator.of(context).popAndPushNamed('/textlist');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TextList(texts: texts)));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -306,27 +299,24 @@ class _HomeState extends State<Home> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          Navigator.of(context).popAndPushNamed('/dashboard');
+                          Navigator.of(context).popAndPushNamed('/home');
                         },
                         icon: Icon(Icons.home_rounded),
                         iconSize: 30,
-                        color: Colors.purple[900],
+                        color: Colors.grey[500],
                       ),
                       IconButton(
                         onPressed: () {
-                          Navigator.of(context).popAndPushNamed('/textlist');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TextList(
+                                        texts: texts,
+                                      )));
                         },
                         icon: Icon(Icons.list_rounded),
                         iconSize: 30,
-                        color: Colors.purple[900],
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.of(context).popAndPushNamed('/profile');
-                        },
-                        icon: Icon(Icons.face_rounded),
-                        iconSize: 30,
-                        color: Colors.purple[900],
+                        color: Colors.grey[500],
                       ),
                     ],
                   ),
@@ -401,17 +391,26 @@ class _HomeState extends State<Home> {
     );
 
     if (response.statusCode == 201) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Success(resText: response.body)));
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Success(resText: response.body)),
+      );
+      setState(() {
+        this.leadingIcon = Icons.add_box_rounded;
+        this.trailingIcons = Icons.check_box_rounded;
+      });
     } else if (response.body == 'Error! -1 already exists.') {
-      return Text('Working on something');
+      return null;
     } else {
-      Navigator.push(
+      await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => Error(resText: response.body)));
+      setState(() {
+        this.leadingIcon = Icons.add_box_rounded;
+        this.trailingIcons = Icons.cancel_rounded;
+      });
     }
   }
 
@@ -428,17 +427,25 @@ class _HomeState extends State<Home> {
     );
 
     if (response.statusCode == 201) {
-      Navigator.push(
+      await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => Success(resText: response.body)));
+      setState(() {
+        this.leadingIcon = Icons.camera_rounded;
+        this.trailingIcons = Icons.check_box_rounded;
+      });
     } else if (response.body == 'Sorry, -1 has been used.') {
       return null;
     } else {
-      Navigator.push(
+      await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => Error(resText: response.body)));
+      setState(() {
+        this.leadingIcon = Icons.camera_rounded;
+        this.trailingIcons = Icons.cancel_rounded;
+      });
     }
   }
 }
