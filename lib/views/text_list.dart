@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'sub_views/empty_list.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TextList extends StatefulWidget {
-  final List<dynamic> texts;
+  final List texts;
 
   const TextList({Key? key, required this.texts}) : super(key: key);
 
@@ -11,44 +12,27 @@ class TextList extends StatefulWidget {
 }
 
 class _TextListState extends State<TextList> {
-  List texts = [];
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('My List'),
+          title: Text(
+            'My List',
+            style: GoogleFonts.montserrat(
+                textStyle: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.w600)),
+          ),
           centerTitle: true,
           elevation: 0,
           leading: BackButton(
-            color: Colors.purple[900],
+            color: Colors.white,
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, widget.texts);
             },
           ),
-          backgroundColor: Colors.white,
-          bottom: TabBar(
-            labelColor: Colors.grey,
-            tabs: [
-              Tab(
-                text: 'Added Text',
-                icon: Icon(
-                  Icons.add_box_rounded,
-                  color: Colors.purple[900],
-                  size: 30,
-                ),
-              ),
-              Tab(
-                text: 'Scanned Text',
-                icon: Icon(
-                  Icons.camera_rounded,
-                  color: Colors.purple[900],
-                  size: 30,
-                ),
-              )
-            ],
-          ),
+          backgroundColor: Colors.purple[900],
         ),
         body: ListView(
           children: [
@@ -68,11 +52,19 @@ class _TextListState extends State<TextList> {
                             color: Colors.grey[50],
                             elevation: 0,
                             child: ListTile(
-                              title: Text(widget.texts[index]),
+                              title: Text(
+                                widget.texts[index],
+                                style: GoogleFonts.montserrat(
+                                    textStyle: TextStyle(
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: 14,
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.w500)),
+                              ),
                               leading: Icon(
-                                Icons.add,
-                                color: Colors.grey[500],
-                                size: 30,
+                                Icons.list_rounded,
+                                color: Colors.purple[900],
+                                size: 25,
                               ),
                               trailing: IconButton(
                                   onPressed: () {
@@ -83,7 +75,7 @@ class _TextListState extends State<TextList> {
                                   color: Colors.red,
                                   icon: Icon(
                                     Icons.delete,
-                                    size: 30,
+                                    size: 25,
                                   )),
                             ),
                           ),
@@ -94,40 +86,40 @@ class _TextListState extends State<TextList> {
         ),
         bottomNavigationBar: PreferredSize(
           preferredSize: Size.fromHeight(70),
-          child: BottomAppBar(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(2, 0, 2, 8),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: Colors.purple[900],
+              unselectedItemColor: Colors.grey[500],
+              selectedFontSize: 12,
+              unselectedFontSize: 10,
+              showUnselectedLabels: false,
+              selectedLabelStyle: GoogleFonts.montserrat(
+                  textStyle: TextStyle(
+                      fontStyle: FontStyle.normal,
+                      color: Colors.purple[900],
+                      fontWeight: FontWeight.w500)),
+              iconSize: 25,
+              currentIndex: 1,
+              onTap: (value) {
+                if (value == 0) Navigator.pop(context, widget.texts);
+                if (value == 1) return null;
+              },
+              backgroundColor: Colors.white,
               elevation: 0,
-              child: Container(
-                height: 60,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(2, 0, 2, 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.of(context).popAndPushNamed('/home');
-                        },
-                        icon: Icon(Icons.home_rounded),
-                        iconSize: 30,
-                        color: Colors.grey[500],
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TextList(
-                                        texts: texts,
-                                      )));
-                        },
-                        icon: Icon(Icons.list_rounded),
-                        iconSize: 30,
-                        color: Colors.grey[500],
-                      ),
-                    ],
-                  ),
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_rounded),
+                  label: 'Home',
                 ),
-              )),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list_rounded),
+                  label: 'List',
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

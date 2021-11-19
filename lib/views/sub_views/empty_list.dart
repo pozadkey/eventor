@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EmptyList extends StatelessWidget {
   const EmptyList({Key? key}) : super(key: key);
@@ -15,10 +16,12 @@ class EmptyList extends StatelessWidget {
           ),
           Text(
             'You have an empty list.',
-            style: TextStyle(
-                color: Colors.grey[500],
-                fontSize: 16,
-                fontWeight: FontWeight.w500),
+            style: GoogleFonts.montserrat(
+                textStyle: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 14,
+                    color: Colors.grey[500],
+                    fontWeight: FontWeight.w500)),
           ),
         ],
       ),

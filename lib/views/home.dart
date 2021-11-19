@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -15,17 +16,16 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with RestorationMixin {
   final _formKey = GlobalKey<FormState>();
   double textSize = 20;
   String? scanTicket;
-  IconData? leadingIcon;
-  IconData? trailingIcons;
-
   List texts = [];
-  final TextEditingController eCtrl = new TextEditingController();
-
+  RestorableTextEditingController _myTextController =
+      RestorableTextEditingController();
   var code;
+  bool _isLoading = true;
+  final pages = [Home(), TextList(texts: [])];
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +45,13 @@ class _HomeState extends State<Home> {
             title: Container(
               padding: EdgeInsets.fromLTRB(15, 40, 15, 5),
               child: Text(
-                'Eventor',
-                style: TextStyle(
-                    color: Colors.purple[900],
-                    fontSize: 18,
-                    height: 1.5,
-                    fontWeight: FontWeight.w700),
+                'EVENTOR',
+                style: GoogleFonts.montserrat(
+                    textStyle: TextStyle(
+                        color: Colors.purple[900],
+                        fontSize: 25,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w700)),
               ),
             ),
             centerTitle: true,
@@ -64,11 +65,15 @@ class _HomeState extends State<Home> {
               child: Form(
                 key: _formKey,
                 child: TextFormField(
-                  controller: eCtrl,
+                  controller: _myTextController.value,
                   onFieldSubmitted: (code) {
-                    texts.add(code);
-                    eCtrl.clear();
-                    setState(() {});
+                    if (code.isEmpty) {
+                      setState(() {});
+                      return null;
+                    } else {
+                      setState(() {});
+                      return null;
+                    }
                   },
                   validator: (val) {
                     if (val!.isEmpty) {
@@ -78,20 +83,40 @@ class _HomeState extends State<Home> {
                       return null;
                     }
                   },
+                  style: GoogleFonts.montserrat(
+                      textStyle: TextStyle(
+                          fontStyle: FontStyle.normal,
+                          fontSize: 14,
+                          color: Colors.grey[900],
+                          fontWeight: FontWeight.w500)),
                   decoration: InputDecoration(
                     fillColor: Colors.grey[50],
                     filled: true,
-                    hintText: 'Enter text',
+                    labelText: 'Enter text',
+                    labelStyle: GoogleFonts.montserrat(
+                        textStyle: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontSize: 14,
+                            color: Colors.grey[500],
+                            fontWeight: FontWeight.w500)),
                     contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                         borderSide: BorderSide(
-                            style: BorderStyle.none, color: Colors.white)),
-                    focusedBorder: UnderlineInputBorder(
+                            style: BorderStyle.solid, color: Colors.yellow)),
+                    errorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          style: BorderStyle.none, color: Colors.white),
+                        style: BorderStyle.solid,
+                        color: Colors.purple,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          style: BorderStyle.solid, color: Colors.white),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          style: BorderStyle.solid, color: Colors.purple),
                     ),
                   ),
                 ),
@@ -124,16 +149,17 @@ class _HomeState extends State<Home> {
                                   IconButton(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
-                                        await addTicket(code);
+                                        await _addText(code);
                                         texts.add(code);
-                                        setState(() {});
                                       } else {
                                         await addBarcode();
                                         if (code == '') {
+                                          setState(() {
+                                            _isLoading = !_isLoading;
+                                          });
                                           return null;
                                         } else {
                                           texts.add(code);
-                                          setState(() {});
                                         }
                                       }
                                     },
@@ -143,10 +169,11 @@ class _HomeState extends State<Home> {
                                   ),
                                   Text(
                                     'ADD TEXT',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        letterSpacing: 1.0,
-                                        fontWeight: FontWeight.w500),
+                                    style: GoogleFonts.montserrat(
+                                        textStyle: TextStyle(
+                                            fontStyle: FontStyle.normal,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500)),
                                   )
                                 ],
                               )),
@@ -167,16 +194,17 @@ class _HomeState extends State<Home> {
                                   IconButton(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
-                                        await validateTicket(code);
+                                        await _validateText(code);
                                         texts.add(code);
-                                        setState(() {});
                                       } else {
                                         await scanBarcode();
                                         if (code.isEmpty) {
+                                          setState(() {
+                                            _isLoading = !_isLoading;
+                                          });
                                           return null;
                                         } else {
                                           texts.add(code);
-                                          setState(() {});
                                         }
                                       }
                                     },
@@ -186,10 +214,11 @@ class _HomeState extends State<Home> {
                                   ),
                                   Text(
                                     'SCAN TEXT',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        letterSpacing: 1.0,
-                                        fontWeight: FontWeight.w500),
+                                    style: GoogleFonts.montserrat(
+                                        textStyle: TextStyle(
+                                            fontStyle: FontStyle.normal,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500)),
                                   )
                                 ],
                               )),
@@ -200,14 +229,22 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
+            Center(
+                child: _isLoading
+                    ? null
+                    : CircularProgressIndicator(
+                        color: Colors.purple[900],
+                        backgroundColor: Colors.purple[500],
+                      )),
             Padding(
               padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
               child: Text(
                 'MY LIST',
-                style: TextStyle(
-                    color: Colors.purple[900],
-                    fontSize: 25,
-                    fontWeight: FontWeight.w700),
+                style: GoogleFonts.montserrat(
+                    textStyle: TextStyle(
+                        color: Colors.purple[900],
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600)),
               ),
             ),
             Padding(
@@ -226,11 +263,19 @@ class _HomeState extends State<Home> {
                             color: Colors.grey[50],
                             elevation: 0,
                             child: ListTile(
-                              title: Text(texts[index]),
+                              title: Text(
+                                texts[index],
+                                style: GoogleFonts.montserrat(
+                                    textStyle: TextStyle(
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: 14,
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.w500)),
+                              ),
                               leading: Icon(
-                                leadingIcon,
+                                Icons.list_rounded,
                                 color: Colors.purple[900],
-                                size: 30,
+                                size: 25,
                               ),
                               trailing: IconButton(
                                   onPressed: () {
@@ -240,8 +285,8 @@ class _HomeState extends State<Home> {
                                   },
                                   color: Colors.red,
                                   icon: Icon(
-                                    trailingIcons,
-                                    size: 30,
+                                    Icons.delete_rounded,
+                                    size: 25,
                                   )),
                             ),
                           ),
@@ -253,10 +298,8 @@ class _HomeState extends State<Home> {
               child: Center(
                 child: TextButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TextList(texts: texts)));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => TextList(texts: texts)));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -264,14 +307,15 @@ class _HomeState extends State<Home> {
                       Icon(
                         Icons.search,
                         color: Colors.white,
+                        size: 18,
                       ),
                       Text(
                         'VIEW MORE...',
-                        style: TextStyle(
-                            color: Colors.white,
-                            letterSpacing: 1.0,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
+                        style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                                fontStyle: FontStyle.normal,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500)),
                       ),
                     ],
                   ),
@@ -288,40 +332,45 @@ class _HomeState extends State<Home> {
         ),
         bottomNavigationBar: PreferredSize(
           preferredSize: Size.fromHeight(70),
-          child: BottomAppBar(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(2, 0, 2, 8),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: Colors.purple[900],
+              unselectedItemColor: Colors.grey[500],
+              selectedFontSize: 12,
+              unselectedFontSize: 10,
+              showUnselectedLabels: false,
+              selectedLabelStyle: GoogleFonts.montserrat(
+                  textStyle: TextStyle(
+                      fontStyle: FontStyle.normal,
+                      color: Colors.purple[900],
+                      fontWeight: FontWeight.w500)),
+              iconSize: 25,
+              currentIndex: 0,
+              onTap: (value) {
+                if (value == 0) return null;
+                if (value == 1)
+                  setState(() {
+                    texts = texts;
+                  });
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TextList(texts: texts)));
+              },
+              backgroundColor: Colors.white,
               elevation: 0,
-              child: Container(
-                height: 60,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(2, 0, 2, 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.of(context).popAndPushNamed('/home');
-                        },
-                        icon: Icon(Icons.home_rounded),
-                        iconSize: 30,
-                        color: Colors.grey[500],
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TextList(
-                                        texts: texts,
-                                      )));
-                        },
-                        icon: Icon(Icons.list_rounded),
-                        iconSize: 30,
-                        color: Colors.grey[500],
-                      ),
-                    ],
-                  ),
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_rounded),
+                  label: 'Home',
                 ),
-              )),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list_rounded),
+                  label: 'List',
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -342,7 +391,8 @@ class _HomeState extends State<Home> {
     setState(() {
       this.code = scanTicket;
     });
-    validateTicket(code);
+    _validateText(code);
+
     if (code == '-1') {
       setState(() {
         this.code = '';
@@ -367,7 +417,8 @@ class _HomeState extends State<Home> {
     setState(() {
       this.code = scanTicket;
     });
-    addTicket(code);
+    _addText(code);
+
     if (code == '-1') {
       setState(() {
         this.code = '';
@@ -377,9 +428,11 @@ class _HomeState extends State<Home> {
     }
   }
 
-  addTicket(code) async {
-    //var url = 'http://10.0.2.2:8000/add';
-    var url = 'http://172.20.10.8:3000/add';
+  _addText(code) async {
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+    var url = 'https://eventor-back.herokuapp.com/add';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -391,31 +444,29 @@ class _HomeState extends State<Home> {
     );
 
     if (response.statusCode == 201) {
-      await Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => Success(resText: response.body)),
       );
-      setState(() {
-        this.leadingIcon = Icons.add_box_rounded;
-        this.trailingIcons = Icons.check_box_rounded;
-      });
     } else if (response.body == 'Error! -1 already exists.') {
       return null;
     } else {
-      await Navigator.push(
+      Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => Error(resText: response.body)));
-      setState(() {
-        this.leadingIcon = Icons.add_box_rounded;
-        this.trailingIcons = Icons.cancel_rounded;
-      });
     }
+    setState(() {
+      _isLoading = !_isLoading;
+    });
   }
 
-  validateTicket(code) async {
-    var url = 'http://172.20.10.8:3000/validate';
+  _validateText(code) async {
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+    var url = 'https://eventor-back.herokuapp.com/validate';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -427,25 +478,28 @@ class _HomeState extends State<Home> {
     );
 
     if (response.statusCode == 201) {
-      await Navigator.push(
+      Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => Success(resText: response.body)));
-      setState(() {
-        this.leadingIcon = Icons.camera_rounded;
-        this.trailingIcons = Icons.check_box_rounded;
-      });
     } else if (response.body == 'Sorry, -1 has been used.') {
       return null;
     } else {
-      await Navigator.push(
+      Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => Error(resText: response.body)));
-      setState(() {
-        this.leadingIcon = Icons.camera_rounded;
-        this.trailingIcons = Icons.cancel_rounded;
-      });
     }
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+  }
+
+  @override
+  String? get restorationId => 'home';
+
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
+    registerForRestoration(_myTextController, 'text');
   }
 }

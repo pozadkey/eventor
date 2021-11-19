@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Error extends StatefulWidget {
   final String resText;
@@ -34,24 +35,27 @@ class _ErrorState extends State<Error> {
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(25, 0, 25, 20),
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 20),
                   child: Text(widget.resText,
-                      style: TextStyle(
-                          color: Colors.grey[900],
-                          fontSize: 16,
-                          letterSpacing: 1.0,
-                          height: 1.5,
-                          fontWeight: FontWeight.w700)),
+                      style: GoogleFonts.montserrat(
+                          textStyle: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 16,
+                              letterSpacing: 0.5,
+                              color: Colors.red[900],
+                              fontWeight: FontWeight.w500))),
                 ),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   'Go back',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
+                  style: GoogleFonts.montserrat(
+                      textStyle: TextStyle(
+                          fontStyle: FontStyle.normal,
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500)),
                 ),
                 style: TextButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
