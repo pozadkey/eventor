@@ -300,6 +300,9 @@ class _HomeState extends State<Home> with RestorationMixin {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => TextList(texts: texts)));
+                    setState(() {
+                      this.texts = texts;
+                    });
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -351,11 +354,11 @@ class _HomeState extends State<Home> with RestorationMixin {
               onTap: (value) {
                 if (value == 0) return null;
                 if (value == 1)
-                  setState(() {
-                    texts = texts;
-                  });
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => TextList(texts: texts)));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => TextList(texts: texts)));
+                setState(() {
+                  this.texts = texts;
+                });
               },
               backgroundColor: Colors.white,
               elevation: 0,

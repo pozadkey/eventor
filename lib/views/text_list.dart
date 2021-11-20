@@ -103,7 +103,10 @@ class _TextListState extends State<TextList> {
               iconSize: 25,
               currentIndex: 1,
               onTap: (value) {
-                if (value == 0) Navigator.pop(context, widget.texts);
+                if (value == 0) 
+                setState(() {
+                  Navigator.pop(context, widget.texts);
+                });
                 if (value == 1) return null;
               },
               backgroundColor: Colors.white,
