@@ -10,6 +10,6 @@ A text scanner for android devices.
 - *Displays list of added and validate texts.*
 
 # Usage
-[Download App - ](https://drive.google.com/file/d/18wX3sTgF3HFa4_n2LhkrhYCe2EQZPULE/view?usp=sharing)
+[Download App](https://drive.google.com/file/d/18wX3sTgF3HFa4_n2LhkrhYCe2EQZPULE/view?usp=sharing)
 
 Please leave me a feedback - [Twitter](https://twitter.com/pozadkey)
