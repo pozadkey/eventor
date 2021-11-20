@@ -6,7 +6,7 @@ A text scanner for android devices.
 
 ## Features
 - *Adds and validates texts manually.*
-- *Add and validates texts by scanning QR code.*
+- *Adds and validates texts by scanning QR code.*
 - *Displays list of added and validate texts.*
 
 # Usage
