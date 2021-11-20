@@ -1,16 +1,15 @@
-# eventor
+# Eventor
+A text scanner for android devices.
 
-A new Flutter project.
+## Version
+1.0.0
 
-## Getting Started
+## Features
+- *Adds and validates texts manually.*
+- *Add and validates texts by scanning QR code.*
+- *Displays list of added and validate texts.*
 
-This project is a starting point for a Flutter application.
+# Usage
+[Download App - ](https://drive.google.com/file/d/18wX3sTgF3HFa4_n2LhkrhYCe2EQZPULE/view?usp=sharing)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Please leave me a feedback - [Twitter](https://twitter.com/pozadkey)
